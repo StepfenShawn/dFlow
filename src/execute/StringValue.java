@@ -5,4 +5,8 @@ public class StringValue implements Value {
 	public StringValue(String val) {
 		this.val = val;
 	}
+	
+	public String getVal() {
+		return this.val;
+	}
 }

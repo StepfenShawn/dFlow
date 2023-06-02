@@ -5,4 +5,12 @@ public class NumberValue implements Value {
 	public NumberValue(long val) {
 		this.val = val;
 	}
+	
+	public long getVal() {
+		return this.val;
+	}
+	
+	public static long getVal(Value ValueObj) {
+		return ((NumberValue)ValueObj).getVal();
+	}
 }

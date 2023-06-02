@@ -54,7 +54,23 @@ public class Evaluate {
 		Value result = null; // 运算结果
 		switch (op) {
 		case TOKEN_OP_ADD:
-			
+			result = new NumberValue(
+					NumberValue.getVal(left) + NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_MINUS:
+			result = new NumberValue(
+					NumberValue.getVal(left) - NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_MUL:
+			result = new NumberValue(
+					NumberValue.getVal(left) * NumberValue.getVal(right));			
+			break;
+		case TOKEN_OP_DIV:
+			result = new NumberValue(
+					NumberValue.getVal(left) / NumberValue.getVal(right));			
+			break;
+		default:
+			break;
 		}
 		return result;
 	}
@@ -62,7 +78,8 @@ public class Evaluate {
 	public static void run(Block block) {
 		for (Stat stat : block.getStats()) {
 			if (stat instanceof PipeStat) {
-				System.out.println(evalExp(((PipeStat)stat).getLeft()));
+				Value v = evalExp(((PipeStat)stat).getLeft());
+				System.out.println(((NumberValue)v).getVal());
 			}
 		}
 	}
