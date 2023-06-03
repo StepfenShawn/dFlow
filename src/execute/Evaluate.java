@@ -1,19 +1,23 @@
 package execute;
 
+import java.util.List;
+
 import ast.Block;
 import ast.Exp;
 import ast.Stat;
 import ast.exps.BinopExp;
 import ast.exps.FalseExp;
+import ast.exps.NameExp;
 import ast.exps.NumberExp;
 import ast.exps.StringExp;
 import ast.exps.TrueExp;
+import ast.stats.AssignStat;
 import ast.stats.PipeStat;
 import lexer.TokenKind;
 
 public class Evaluate {
 	
-	private Context context;
+	public static Context context = new Context();
 	
 	public static String evalStringExp(StringExp exp) {
 		String str = exp.getStr();
@@ -47,6 +51,9 @@ public class Evaluate {
 			Value right = evalExp(((BinopExp)exp).getRight());
 			return evalOp(left, right, op);
 		}
+		else if (exp instanceof NameExp) {
+			return context.getEnv().get(((NameExp)exp).getName());
+		}
 		return null;
 	}
 	
@@ -69,6 +76,10 @@ public class Evaluate {
 			result = new NumberValue(
 					NumberValue.getVal(left) / NumberValue.getVal(right));			
 			break;
+		case TOKEN_OP_MOD:
+			result = new NumberValue(
+					NumberValue.getVal(left) % NumberValue.getVal(right));
+			break;
 		default:
 			break;
 		}
@@ -77,10 +88,21 @@ public class Evaluate {
 	
 	public static void run(Block block) {
 		for (Stat stat : block.getStats()) {
+			
 			if (stat instanceof PipeStat) {
 				Value v = evalExp(((PipeStat)stat).getLeft());
-				System.out.println(((NumberValue)v).getVal());
+				System.out.println(v);
 			}
+			
+			else if (stat instanceof AssignStat) {
+				List<NameExp> vars = ((AssignStat)stat).getVarList();
+				List<Exp> values = ((AssignStat)stat).getExpList();
+				assert (vars.size() == values.size());
+				for (int i = 0; i < vars.size(); i++) {
+					context.put(vars.get(i).getName(), evalExp(values.get(i)));
+				}
+			}
+			
 		}
 	}
 }

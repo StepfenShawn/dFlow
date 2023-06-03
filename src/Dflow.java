@@ -12,7 +12,7 @@ public class Dflow {
 		try (BufferedReader buf = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			while ((line = buf.readLine()) != null) {
-				source += line + "\n";
+				source += line + '\n';
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

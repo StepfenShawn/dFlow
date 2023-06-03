@@ -9,4 +9,9 @@ public class StringValue implements Value {
 	public String getVal() {
 		return this.val;
 	}
+	
+	@Override
+	public String toString() {
+		return this.val;
+	}
 }

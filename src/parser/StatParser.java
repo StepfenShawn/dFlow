@@ -1,7 +1,11 @@
 package parser;
 
+import java.util.List;
+
 import ast.Exp;
 import ast.Stat;
+import ast.exps.NameExp;
+import ast.stats.AssignStat;
 import ast.stats.PipeStat;
 import lexer.Lexer;
 import lexer.TokenKind;
@@ -40,7 +44,11 @@ public class StatParser {
 	}
 	
 	private static Stat parseAssignStat(Lexer lexer) {
-		return null;
+		lexer.skipNextKind(TokenKind.TOKEN_KW_LET);
+		List<NameExp> varList = ExpParser.parseIdList(lexer);
+		lexer.skipNextKind(TokenKind.TOKEN_OP_ASSIGN);
+		List<Exp> valueList = ExpParser.parseExpList(lexer);
+		return new AssignStat(lexer.getLine(), varList, valueList);
 	}
 	
 	private static Stat parseFuncStat(Lexer lexer) {

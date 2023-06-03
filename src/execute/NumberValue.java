@@ -13,4 +13,9 @@ public class NumberValue implements Value {
 	public static long getVal(Value ValueObj) {
 		return ((NumberValue)ValueObj).getVal();
 	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(val);
+	}
 }

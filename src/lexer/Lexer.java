@@ -28,15 +28,23 @@ public class Lexer {
     	State state = State.BEGIN;
     	String token_value = "";
     	TokenKind kind = TokenKind.TOKEN_EOF;
+    	char c;
     	
     	if (isEndOfFile()) {
     		return new Token(this.line, kind, "");
     	}
     	
-    	char c;
     	do {
     		c = this.nextc();
     	} while (isWhiteSpace(c));
+    	
+    	while (isNewLine(c) && !isEndOfFile()) {
+    		c = this.nextc();
+    		if (isEndOfFile()) {
+        		return new Token(this.line, kind, "");
+        	}
+    	}
+    	
     	while (state != State.FINISH) {
     		switch (state) {
     		case BEGIN:
@@ -48,21 +56,24 @@ public class Lexer {
     				state = State.IDENTIFIER;
     				kind = TokenKind.TOKEN_IDENTIFIER;
     			} 
-    			else if (c == '\"') {
+    			
+    			else if (c == '"') {
     				state = State.STRING;
     				kind = TokenKind.TOKEN_STRING;
-    			} 
+    			}
+    			
     			else if (isNewLine(c)) {
     				this.line++;
     				state = State.FINISH;
-    			} 
-    			else if ("+-*/%(){}|,;".lastIndexOf(c) != -1) {
+    			}
+    			
+    			else if ("+-*/%(){}|,;=".lastIndexOf(c) != -1) {
     				state = State.FINISH;
     				kind = Token.separator.get(c);
     				token_value += c;
     			}
     			else {
-    				state = State.FINISH;
+    				throw new RuntimeException("Unknown token: " + c);
     			}
     			break;
     		
@@ -108,9 +119,8 @@ public class Lexer {
     			}
     			state = State.FINISH;
     			break;
+    			
     		}
-    		
-    		
     	}
     	return new Token(this.line, kind, token_value);
     }
@@ -153,5 +163,9 @@ public class Lexer {
     
     private boolean isEndOfFile() {
     	return this.colOffset >= source.length();
+    }
+    
+    public int getLine() {
+    	return this.line;
     }
 }

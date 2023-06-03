@@ -1,1 +1,5 @@
-(1 + 1) * (2 + (3 * 2)) | stdout
+"Hello World" | stdout;
+(1 + 1) * (2 + (3 * 2)) | stdout;
+let a = 10;
+let b = 20;
+a + b | stdout

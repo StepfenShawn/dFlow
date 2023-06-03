@@ -46,6 +46,11 @@ public class ExpParser {
 		put("-", new Priority(10, 20, 50));
 		put("*", new Priority(30, 40, 0));
 		put("/", new Priority(30, 40, 0));
+		put(">", new Priority(40, 50, 0));
+		put("<", new Priority(40, 50, 0));
+		put(">=", new Priority(40, 50, 0));
+		put("<=", new Priority(40, 50, 0));
+		put("==", new Priority(40, 50, 0));
 	}};
 	
 	public static List<Exp> parseExpList(Lexer lexer) {
@@ -62,10 +67,10 @@ public class ExpParser {
 		Exp lhs = parsePrimary(lexer);
 		while (true) {
 			Token tok_op = lexer.peek();
-			if (! tok_op.getValue().equals("+") &&
-				! tok_op.getValue().equals("*") &&
-				! tok_op.getValue().equals("/") &&
-				! tok_op.getValue().equals("-")) {
+			if (tok_op.getKind() == TokenKind.TOKEN_EOF) {
+				break;
+			}
+			if ("+-*/>=<==".indexOf(tok_op.getValue()) == -1) {
 				break;
 			}
 			
@@ -103,20 +108,19 @@ public class ExpParser {
 		}
 	}
 	
-	private static List<Exp> parseIdList(Lexer lexer) {
-		List<Exp> idList = new ArrayList<>();
+	public static List<NameExp> parseIdList(Lexer lexer) {
+		List<NameExp> idList = new ArrayList<>();
 		if (lexer.lookAhead() != TokenKind.TOKEN_IDENTIFIER) {
-			throw new RuntimeException("");
+			throw new RuntimeException("Excepted " + TokenKind.TOKEN_IDENTIFIER);
 		}
-//		idList.add(new NameExp());
-//		while (lexer.lookAhead() == TokenKind.TOKEN_SEP_COMMA) {
-//			lexer.getToken();
-//			if (lexer.lookAhead() != TokenKind.TOKEN_IDENTIFIER) {
-//				throw new RuntimeException("");
-//			}
-//			idList.add(new Name);
-//		}
-//		return idList;
-		return null;
+		idList.add(new NameExp(lexer.getToken()));
+		while (lexer.lookAhead() == TokenKind.TOKEN_SEP_COMMA) {
+			lexer.getToken();
+			if (lexer.lookAhead() != TokenKind.TOKEN_IDENTIFIER) {
+				throw new RuntimeException("");
+			}
+			idList.add(new NameExp(lexer.getToken()));
+		}
+		return idList;
 	}
 }

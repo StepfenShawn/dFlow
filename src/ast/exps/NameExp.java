@@ -15,4 +15,8 @@ public class NameExp extends PrefixExp {
 		this.line = tok.getLine();
 		this.name = tok.getValue();
 	}
+	
+	public String getName() {
+		return this.name;
+	}
 }
