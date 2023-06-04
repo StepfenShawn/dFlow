@@ -19,12 +19,13 @@ public class Token {
         separator.put('*', TokenKind.TOKEN_OP_MUL);
         separator.put('/', TokenKind.TOKEN_OP_DIV);
         separator.put('%', TokenKind.TOKEN_OP_MOD);
-        separator.put('=', TokenKind.TOKEN_OP_ASSIGN);
         
         separator.put('(', TokenKind.TOKEN_SEP_LPAREN);
         separator.put(')', TokenKind.TOKEN_SEP_RPAREN);
         separator.put('{', TokenKind.TOKEN_SEP_LCURLY);
         separator.put('}', TokenKind.TOKEN_SEP_RCURLY);
+        separator.put('[', TokenKind.TOKEN_SEP_LBRACK);
+        separator.put(']', TokenKind.TOKEN_SEP_RBRACK);
         separator.put(';', TokenKind.TOKEN_SEP_END);
         separator.put(',', TokenKind.TOKEN_SEP_COMMA);
         

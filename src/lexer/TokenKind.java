@@ -7,6 +7,8 @@ public enum TokenKind {
     TOKEN_SEP_RPAREN , // )
     TOKEN_SEP_LCURLY , // {
     TOKEN_SEP_RCURLY , // }
+    TOKEN_SEP_LBRACK , // [
+    TOKEN_SEP_RBRACK , // ]
     TOKEN_SEP_COMMA  , // ,
     TOKEN_SEP_END	 , // ;
 
@@ -19,10 +21,12 @@ public enum TokenKind {
     TOKEN_OP_IDIV    , // //
     TOKEN_OP_POW     , // ^
     TOKEN_OP_MOD     , // %
-    TOKEN_OP_BAND    , // &
-    TOKEN_OP_BOR     , // |
-    TOKEN_OP_SHR     , // >>
-    TOKEN_OP_SHL     , // <<
+    
+    TOKEN_OP_GT		 , // >
+    TOKEN_OP_GE		 , // >=
+    TOKEN_OP_LT		 , // <
+    TOKEN_OP_LE		 , // <=
+    TOKEN_OP_EQ		 , // ==
 
     TOKEN_KW_IF      , // if
     TOKEN_KW_ELIF    , // elif

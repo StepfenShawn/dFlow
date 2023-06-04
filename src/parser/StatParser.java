@@ -39,7 +39,6 @@ public class StatParser {
 	}
 	
 	private static Stat parseIfStat(Lexer lexer) {
-		lexer.getToken();
 		return null;
 	}
 	

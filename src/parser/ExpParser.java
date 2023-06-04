@@ -7,6 +7,7 @@ import java.util.Map;
 
 import ast.Exp;
 import ast.exps.BinopExp;
+import ast.exps.ListExp;
 import ast.exps.NumberExp;
 import ast.exps.NameExp;
 import ast.exps.StringExp;
@@ -46,11 +47,11 @@ public class ExpParser {
 		put("-", new Priority(10, 20, 50));
 		put("*", new Priority(30, 40, 0));
 		put("/", new Priority(30, 40, 0));
-		put(">", new Priority(40, 50, 0));
-		put("<", new Priority(40, 50, 0));
-		put(">=", new Priority(40, 50, 0));
-		put("<=", new Priority(40, 50, 0));
-		put("==", new Priority(40, 50, 0));
+		put(">", new Priority(0, 10, 0));
+		put("<", new Priority(0, 10, 0));
+		put(">=", new Priority(0, 10, 0));
+		put("<=", new Priority(0, 10, 0));
+		put("==", new Priority(0, 10, 0));
 	}};
 	
 	public static List<Exp> parseExpList(Lexer lexer) {
@@ -93,6 +94,14 @@ public class ExpParser {
 		
 	}
 	
+	public static Exp parseListExpr(Lexer lexer) {
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_LBRACK);
+		List<Exp> expList = parseExpList(lexer);
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_RBRACK);
+		Exp exp = new ListExp(lexer.getLine(), expList);
+		return exp;
+	}
+	
 	private static Exp parsePrimary(Lexer lexer) {
 		switch (lexer.lookAhead()) {
 		case TOKEN_STRING: // String
@@ -103,6 +112,8 @@ public class ExpParser {
 			return new NameExp(lexer.getToken());
 		case TOKEN_SEP_LPAREN:
 			return parseParenExpr(lexer);
+		case TOKEN_SEP_LBRACK:
+			return parseListExpr(lexer);
 		default:
 			return null;
 		}

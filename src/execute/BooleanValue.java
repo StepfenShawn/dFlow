@@ -5,4 +5,9 @@ public class BooleanValue implements Value{
 	public BooleanValue(boolean val) {
 		this.val = val;
 	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(this.val);
+	}
 }

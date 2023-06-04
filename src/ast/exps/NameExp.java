@@ -1,9 +1,8 @@
 package ast.exps;
-
-import ast.PrefixExp;
+import ast.Exp;
 import lexer.Token;
 
-public class NameExp extends PrefixExp {
+public class NameExp extends Exp {
 	private String name;
 	
 	public NameExp(int line, String name) {

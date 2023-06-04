@@ -1,5 +1,6 @@
 package execute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ast.Block;
@@ -7,6 +8,7 @@ import ast.Exp;
 import ast.Stat;
 import ast.exps.BinopExp;
 import ast.exps.FalseExp;
+import ast.exps.ListExp;
 import ast.exps.NameExp;
 import ast.exps.NumberExp;
 import ast.exps.StringExp;
@@ -47,12 +49,19 @@ public class Evaluate {
 		} 
 		else if (exp instanceof BinopExp) {
 			TokenKind op = ((BinopExp)exp).getOp();
-			Value left = evalExp(((BinopExp)exp).getLeft());
-			Value right = evalExp(((BinopExp)exp).getRight());
+			Value left = evalExp( ((BinopExp)exp).getLeft() );
+			Value right = evalExp( ((BinopExp)exp).getRight() );
 			return evalOp(left, right, op);
 		}
 		else if (exp instanceof NameExp) {
-			return context.getEnv().get(((NameExp)exp).getName());
+			return context.getEnv().get( ((NameExp)exp).getName() );
+		}
+		else if (exp instanceof ListExp) {
+			List<Value> vals = new ArrayList<>();
+			for (Exp e : ((ListExp)exp).getList() ) {
+				vals.add(evalExp(e));
+			}
+			return new ListValue(vals);
 		}
 		return null;
 	}
@@ -79,6 +88,26 @@ public class Evaluate {
 		case TOKEN_OP_MOD:
 			result = new NumberValue(
 					NumberValue.getVal(left) % NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_GT:
+			result = new BooleanValue(
+					NumberValue.getVal(left) > NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_GE:
+			result = new BooleanValue(
+					NumberValue.getVal(left) >= NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_LT:
+			result = new BooleanValue(
+					NumberValue.getVal(left) < NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_LE:
+			result = new BooleanValue(
+					NumberValue.getVal(left) <= NumberValue.getVal(right));
+			break;
+		case TOKEN_OP_EQ:
+			result = new BooleanValue(
+					NumberValue.getVal(left) == NumberValue.getVal(right));
 			break;
 		default:
 			break;

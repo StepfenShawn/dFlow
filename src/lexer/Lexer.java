@@ -67,11 +67,48 @@ public class Lexer {
     				state = State.FINISH;
     			}
     			
-    			else if ("+-*/%(){}|,;=".lastIndexOf(c) != -1) {
+    			else if ("+-*/%(){}[]|,;".lastIndexOf(c) != -1) {
     				state = State.FINISH;
     				kind = Token.separator.get(c);
     				token_value += c;
     			}
+    			
+    			else if (c == '>') {
+    				token_value += c;
+    				if (nextc() == '=') {
+    					token_value += '=';
+    					kind = TokenKind.TOKEN_OP_GE;
+    				} else {
+    					back(1);
+    					kind = TokenKind.TOKEN_OP_GT;
+    				}
+    				state = State.FINISH;
+    			}
+    			
+    			else if (c == '<') {
+    				token_value += c;
+    				if (nextc() == '=') {
+    					token_value += '=';
+    					kind = TokenKind.TOKEN_OP_LE;
+    				} else {
+    					back(1);
+    					kind = TokenKind.TOKEN_OP_LT;
+    				}
+    				state = State.FINISH;
+    			}
+    			
+    			else if (c == '=') {
+    				token_value += c;
+    				if (nextc() == '=') {
+    					token_value += '=';
+    					kind = TokenKind.TOKEN_OP_EQ;
+    				} else {
+    					back(1);
+    					kind = TokenKind.TOKEN_OP_ASSIGN;
+    				}
+    				state = State.FINISH;
+    			}
+    			
     			else {
     				throw new RuntimeException("Unknown token: " + c);
     			}
