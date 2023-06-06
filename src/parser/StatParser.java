@@ -12,18 +12,10 @@ import lexer.TokenKind;
 
 public class StatParser {
 	
-	/**
-	 * <stat> = ''
-	 * 		  | 'let' <varlist> '=' <explist>
-	 * 		  | 
-	 */
-	
 	static Stat parseStat(Lexer lexer) {
 		switch (lexer.lookAhead()) {
 		case TOKEN_KW_FUNC:
 			return parseFuncStat(lexer);
-		case TOKEN_KW_IF:
-			return parseIfStat(lexer);
 		case TOKEN_KW_LET:
 			return parseAssignStat(lexer);
 		default:
@@ -38,10 +30,6 @@ public class StatParser {
 		return new PipeStat(left, right);
 	}
 	
-	private static Stat parseIfStat(Lexer lexer) {
-		return null;
-	}
-	
 	private static Stat parseAssignStat(Lexer lexer) {
 		lexer.skipNextKind(TokenKind.TOKEN_KW_LET);
 		List<NameExp> varList = ExpParser.parseIdList(lexer);
@@ -54,7 +42,9 @@ public class StatParser {
 		lexer.getToken();
 		Exp func_name = ExpParser.parseExp(lexer, 0);
 		lexer.skipNextKind(TokenKind.TOKEN_SEP_LPAREN);
+		List<NameExp> argList = ExpParser.parseIdList(lexer);
 		lexer.skipNextKind(TokenKind.TOKEN_SEP_LPAREN);
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_DO);
 		return null;
 	}
 }

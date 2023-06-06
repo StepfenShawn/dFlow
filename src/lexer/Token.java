@@ -12,6 +12,7 @@ public class Token {
         keywords.put("if", TokenKind.TOKEN_KW_IF);
         keywords.put("else", TokenKind.TOKEN_KW_ELSE);
         keywords.put("func", TokenKind.TOKEN_KW_FUNC);
+        keywords.put("lambda", TokenKind.TOKEN_KW_LAMBDA);
         keywords.put("let", TokenKind.TOKEN_KW_LET);
         
         separator.put('+', TokenKind.TOKEN_OP_ADD);

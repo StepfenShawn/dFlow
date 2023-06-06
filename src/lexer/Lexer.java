@@ -99,9 +99,13 @@ public class Lexer {
     			
     			else if (c == '=') {
     				token_value += c;
-    				if (nextc() == '=') {
+    				char next = nextc();
+    				if (next == '=') {
     					token_value += '=';
     					kind = TokenKind.TOKEN_OP_EQ;
+    				} else if (next == '>') {
+    					token_value += '>';
+    					kind = TokenKind.TOKEN_SEP_DO;
     				} else {
     					back(1);
     					kind = TokenKind.TOKEN_OP_ASSIGN;

@@ -18,4 +18,8 @@ public class NameExp extends Exp {
 	public String getName() {
 		return this.name;
 	}
+	
+	public static NameExp valueOf(Exp exp) {
+		return (NameExp)exp;
+	}
 }

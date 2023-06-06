@@ -19,4 +19,8 @@ public class StringExp extends Exp {
 	public String getStr() {
 		return str;
 	}
+	
+	public static StringExp valueOf(Exp exp) {
+		return (StringExp)exp;
+	}
 }

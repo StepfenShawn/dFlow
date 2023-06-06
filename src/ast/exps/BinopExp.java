@@ -27,4 +27,8 @@ public class BinopExp extends Exp {
 	public TokenKind getOp() {
 		return this.op;
 	}
+	
+	public static BinopExp valueOf(Exp exp) {
+		return (BinopExp)exp;
+	}
 }

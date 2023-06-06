@@ -6,8 +6,13 @@ public class BooleanValue implements Value{
 		this.val = val;
 	}
 	
+	public boolean getVal() {
+		return this.val;
+	}
+	
 	@Override
 	public String toString() {
 		return String.valueOf(this.val);
 	}
+	
 }

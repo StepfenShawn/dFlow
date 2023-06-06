@@ -14,4 +14,8 @@ public class ListExp extends Exp {
 	public List<Exp> getList() {
 		return this.list;
 	}
+	
+	public static ListExp valueOf(Exp exp) {
+		return (ListExp)exp;
+	}
 }

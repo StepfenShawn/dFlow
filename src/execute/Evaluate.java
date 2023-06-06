@@ -8,6 +8,7 @@ import ast.Exp;
 import ast.Stat;
 import ast.exps.BinopExp;
 import ast.exps.FalseExp;
+import ast.exps.IfExp;
 import ast.exps.ListExp;
 import ast.exps.NameExp;
 import ast.exps.NumberExp;
@@ -34,7 +35,7 @@ public class Evaluate {
 	
 	public static Value evalExp(Exp exp) {
 		if (exp instanceof StringExp) {
-			String val = evalStringExp((StringExp)exp);
+			String val = evalStringExp(StringExp.valueOf(exp));
 			return new StringValue(val);
 		} 
 		else if (exp instanceof TrueExp) {
@@ -44,24 +45,32 @@ public class Evaluate {
 			return new BooleanValue(false);
 		} 
 		else if (exp instanceof NumberExp) {
-			long num_val = evalNumberExp((NumberExp)exp);
+			long num_val = evalNumberExp(NumberExp.valueOf(exp));
 			return new NumberValue(num_val);
 		} 
 		else if (exp instanceof BinopExp) {
-			TokenKind op = ((BinopExp)exp).getOp();
-			Value left = evalExp( ((BinopExp)exp).getLeft() );
-			Value right = evalExp( ((BinopExp)exp).getRight() );
+			TokenKind op = BinopExp.valueOf(exp).getOp();
+			Value left = evalExp(BinopExp.valueOf(exp).getLeft());
+			Value right = evalExp(BinopExp.valueOf(exp).getRight() );
 			return evalOp(left, right, op);
 		}
 		else if (exp instanceof NameExp) {
-			return context.getEnv().get( ((NameExp)exp).getName() );
+			return context.getEnv().get(NameExp.valueOf(exp).getName() );
 		}
 		else if (exp instanceof ListExp) {
 			List<Value> vals = new ArrayList<>();
-			for (Exp e : ((ListExp)exp).getList() ) {
+			for (Exp e : ListExp.valueOf(exp).getList() ) {
 				vals.add(evalExp(e));
 			}
 			return new ListValue(vals);
+		}
+		else if (exp instanceof IfExp) {
+			Value cond = evalExp(IfExp.valueOf(exp).getIfCond());
+			if (((BooleanValue)cond).getVal()) {
+				return evalExp(IfExp.valueOf(exp).getIfBlock());
+			} else {
+				return evalExp(IfExp.valueOf(exp).getElseBlock());
+			}
 		}
 		return null;
 	}

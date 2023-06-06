@@ -11,6 +11,7 @@ public enum TokenKind {
     TOKEN_SEP_RBRACK , // ]
     TOKEN_SEP_COMMA  , // ,
     TOKEN_SEP_END	 , // ;
+    TOKEN_SEP_DO	 , // =>
 
     TOKEN_OP_ASSIGN  , // =
     TOKEN_OP_MINUS   , // -
@@ -31,7 +32,8 @@ public enum TokenKind {
     TOKEN_KW_IF      , // if
     TOKEN_KW_ELIF    , // elif
     TOKEN_KW_ELSE    , // else
-    TOKEN_KW_FUNC	 , // func
+    TOKEN_KW_LAMBDA	 , // lambda
+    TOKEN_KW_FUNC	 , // fnuc
     TOKEN_KW_LET	 , // let
 
     TOKEN_NUMBER,

@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ast.Block;
 import ast.Exp;
+import ast.Stat;
 import ast.exps.BinopExp;
+import ast.exps.IfExp;
+import ast.exps.LambdaExp;
 import ast.exps.ListExp;
 import ast.exps.NumberExp;
 import ast.exps.NameExp;
@@ -43,10 +47,11 @@ class Priority {
 public class ExpParser {
 	
 	static final Map<String, Priority> precedence = new HashMap<String, Priority>(){{
-		put("+", new Priority(10, 20, 50));
-		put("-", new Priority(10, 20, 50));
-		put("*", new Priority(30, 40, 0));
-		put("/", new Priority(30, 40, 0));
+		put("+", new Priority(30, 40, 50));
+		put("-", new Priority(30, 40, 50));
+		put("*", new Priority(50, 60, 0));
+		put("/", new Priority(50, 60, 0));
+		put("%", new Priority(20, 30, 0));
 		put(">", new Priority(0, 10, 0));
 		put("<", new Priority(0, 10, 0));
 		put(">=", new Priority(0, 10, 0));
@@ -71,7 +76,7 @@ public class ExpParser {
 			if (tok_op.getKind() == TokenKind.TOKEN_EOF) {
 				break;
 			}
-			if ("+-*/>=<==".indexOf(tok_op.getValue()) == -1) {
+			if ("+-*/%>=<==".indexOf(tok_op.getValue()) == -1) {
 				break;
 			}
 			
@@ -114,6 +119,10 @@ public class ExpParser {
 			return parseParenExpr(lexer);
 		case TOKEN_SEP_LBRACK:
 			return parseListExpr(lexer);
+		case TOKEN_KW_LAMBDA:
+			return parseLambdaExpr(lexer);
+		case TOKEN_KW_IF:
+			return parseIfExpr(lexer);
 		default:
 			return null;
 		}
@@ -133,5 +142,35 @@ public class ExpParser {
 			idList.add(new NameExp(lexer.getToken()));
 		}
 		return idList;
+	}
+	
+	public static Exp parseLambdaExpr(Lexer lexer) {
+
+		lexer.skipNextKind(TokenKind.TOKEN_KW_LAMBDA);
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_LPAREN);
+		
+		List<NameExp> argList = ExpParser.parseIdList(lexer);
+		
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_LPAREN);
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_DO);
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_LCURLY);
+		
+		Exp body = ExpParser.parseExp(lexer, 0);
+		
+		lexer.skipNextKind(TokenKind.TOKEN_SEP_RCURLY);
+		
+		return new LambdaExp(lexer.getLine(), argList, body);
+	}
+	
+	public static Exp parseIfExpr(Lexer lexer) {
+		lexer.skipNextKind(TokenKind.TOKEN_KW_IF);
+		Exp ifCond = ExpParser.parseExp(lexer, 0);
+		Exp ifBlock = ExpParser.parseExp(lexer, 0);
+		Exp elseBlock = null;
+		if (lexer.lookAhead() == TokenKind.TOKEN_KW_ELSE) {
+			lexer.getToken();
+			elseBlock = ExpParser.parseExp(lexer, 0);
+		}
+		return new IfExp(lexer.getLine(), ifCond, ifBlock, elseBlock);
 	}
 }

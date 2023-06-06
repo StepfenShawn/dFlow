@@ -20,7 +20,7 @@ public class BlockParser {
 		return block;
 	}
 	
-	private static List<Stat> parseStats(Lexer lexer) {
+	static List<Stat> parseStats(Lexer lexer) {
         List<Stat> stats = new ArrayList<>();
         stats.add(StatParser.parseStat(lexer));
         while (lexer.lookAhead() == TokenKind.TOKEN_SEP_END) {

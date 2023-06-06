@@ -23,4 +23,8 @@ public class NumberExp extends Exp {
 	public int getLine() {
 		return this.line;
 	}
+	
+	public static NumberExp valueOf(Exp exp) {
+		return (NumberExp)exp;
+	}
 }
