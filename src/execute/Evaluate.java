@@ -8,6 +8,7 @@ import ast.Exp;
 import ast.Stat;
 import ast.exps.BinopExp;
 import ast.exps.FalseExp;
+import ast.exps.FuncCallExp;
 import ast.exps.IfExp;
 import ast.exps.ListExp;
 import ast.exps.NameExp;
@@ -15,6 +16,7 @@ import ast.exps.NumberExp;
 import ast.exps.StringExp;
 import ast.exps.TrueExp;
 import ast.stats.AssignStat;
+import ast.stats.FuncStat;
 import ast.stats.PipeStat;
 import lexer.TokenKind;
 
@@ -34,26 +36,32 @@ public class Evaluate {
 	}
 	
 	public static Value evalExp(Exp exp) {
+		// 字符串表达式
 		if (exp instanceof StringExp) {
 			String val = evalStringExp(StringExp.valueOf(exp));
 			return new StringValue(val);
 		} 
+		// True表达式
 		else if (exp instanceof TrueExp) {
 			return new BooleanValue(true);
-		} 
+		}
+		// False表达式
 		else if (exp instanceof FalseExp) {
 			return new BooleanValue(false);
 		} 
+		// 数字表达式
 		else if (exp instanceof NumberExp) {
 			long num_val = evalNumberExp(NumberExp.valueOf(exp));
 			return new NumberValue(num_val);
 		} 
+		// 运算表达式
 		else if (exp instanceof BinopExp) {
 			TokenKind op = BinopExp.valueOf(exp).getOp();
 			Value left = evalExp(BinopExp.valueOf(exp).getLeft());
 			Value right = evalExp(BinopExp.valueOf(exp).getRight() );
 			return evalOp(left, right, op);
 		}
+		// 变量名表达式
 		else if (exp instanceof NameExp) {
 			return context.getEnv().get(NameExp.valueOf(exp).getName() );
 		}
@@ -71,6 +79,9 @@ public class Evaluate {
 			} else {
 				return evalExp(IfExp.valueOf(exp).getElseBlock());
 			}
+		}
+		else if (exp instanceof FuncCallExp) {
+			return evalFuncCall(FuncCallExp.valueOf(exp));
 		}
 		return null;
 	}
@@ -124,14 +135,35 @@ public class Evaluate {
 		return result;
 	}
 	
+	public static Value evalFuncCall(FuncCallExp exp) {
+		Evaluate env = new Evaluate();
+		return null;
+	}
+	
+	public static void evalPipeStat(PipeStat s) {
+		Value v = evalExp(s.getExps().get(0));
+		for (int i = 1; i < s.getExps().size(); i++) {
+			// 函数调用
+			if (s.getExps().get(i) instanceof NameExp) {
+				String func_name = NameExp.valueOf(s.getExps().get(i)).getName();
+				if (func_name.equals("stdout")) {
+					System.out.println(v);
+				} else if (func_name.equals("sum")) {
+					return;
+				}
+			}
+		}
+	}
+	
 	public static void run(Block block) {
 		for (Stat stat : block.getStats()) {
 			
+			// 管道语句
 			if (stat instanceof PipeStat) {
-				Value v = evalExp(((PipeStat)stat).getLeft());
-				System.out.println(v);
+				evalPipeStat((PipeStat)stat);
 			}
 			
+			// 赋值语句
 			else if (stat instanceof AssignStat) {
 				List<NameExp> vars = ((AssignStat)stat).getVarList();
 				List<Exp> values = ((AssignStat)stat).getExpList();
@@ -139,6 +171,18 @@ public class Evaluate {
 				for (int i = 0; i < vars.size(); i++) {
 					context.put(vars.get(i).getName(), evalExp(values.get(i)));
 				}
+			}
+			
+			// 函数定义语句
+			else if (stat instanceof FuncStat) {
+				
+				Exp name = ((FuncStat)stat).getFuncName();
+				String func_name = NameExp.valueOf(name).getName();
+				List<NameExp> args = ((FuncStat)stat).getArgs();
+				List<Stat> body = ((FuncStat)stat).getBlocks();
+				
+				context.put(func_name, 
+					new FunctionValue(func_name, args, new Block(body)));
 			}
 			
 		}

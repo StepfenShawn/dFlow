@@ -1,22 +1,18 @@
 package ast.stats;
 
+import java.util.List;
+
 import ast.Exp;
 import ast.Stat;
 
 public class PipeStat extends Stat {
-	private Exp left;
-	private Exp right;
+	private List<Exp> exps;
 	
-	public PipeStat(Exp left, Exp right) {
-		this.left = left;
-		this.right = right;
+	public PipeStat(List<Exp> exps) {
+		this.exps = exps;
 	}
 	
-	public Exp getRight() {
-		return this.right;
-	}
-	
-	public Exp getLeft() {
-		return this.left;
+	public List<Exp> getExps() {
+		return this.exps;
 	}
 }

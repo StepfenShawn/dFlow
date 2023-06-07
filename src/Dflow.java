@@ -7,7 +7,7 @@ import parser.Parser;
 
 public class Dflow {
 	public static void main(String[] args) {
-		String fileName = "E:\\Code\\Learn\\eclipse-workspace\\dflow\\src\\HelloWorld.dflow";
+		String fileName = args[0];
 		String source = "";
 		try (BufferedReader buf = new BufferedReader(new FileReader(fileName))) {
 			String line;

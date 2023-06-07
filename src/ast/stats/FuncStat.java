@@ -18,4 +18,16 @@ public class FuncStat extends Stat {
 		this.args = args;
 		this.blocks = blocks;
 	}
+	
+	public Exp getFuncName() {
+		return this.func_name;
+	}
+	
+	public List<NameExp> getArgs() {
+		return this.args;
+	}
+	
+	public List<Stat> getBlocks() {
+		return this.blocks;
+	}
 }

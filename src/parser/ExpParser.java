@@ -9,6 +9,7 @@ import ast.Block;
 import ast.Exp;
 import ast.Stat;
 import ast.exps.BinopExp;
+import ast.exps.FuncCallExp;
 import ast.exps.IfExp;
 import ast.exps.LambdaExp;
 import ast.exps.ListExp;
@@ -19,16 +20,6 @@ import lexer.Lexer;
 import lexer.Token;
 import lexer.TokenKind;
 
-/*
- * <explist> = <exp> {',', exp}
- * 
- * <exp> = <primary> <binop_rhs>
- * 
- * <primary> = identifier
- * 			 | Number
- * 			 | '(' <exp> ')'
- * 
- * */
 
 class Priority {
 	public int left_prec;
@@ -113,8 +104,6 @@ public class ExpParser {
 			return new StringExp(lexer.getToken());
 		case TOKEN_NUMBER:
 			return new NumberExp(lexer.getToken());
-		case TOKEN_IDENTIFIER:
-			return new NameExp(lexer.getToken());
 		case TOKEN_SEP_LPAREN:
 			return parseParenExpr(lexer);
 		case TOKEN_SEP_LBRACK:
@@ -124,8 +113,24 @@ public class ExpParser {
 		case TOKEN_KW_IF:
 			return parseIfExpr(lexer);
 		default:
-			return null;
+			return parsePrefixExpr(lexer);
 		}
+	}
+	
+	public static Exp parsePrefixExpr(Lexer lexer) {
+		if (lexer.lookAhead() == TokenKind.TOKEN_IDENTIFIER) {
+			Token prefix = lexer.getToken();
+			// 是否是函数调用表达式?
+			if (lexer.lookAhead() == TokenKind.TOKEN_SEP_LPAREN) {
+				lexer.getToken();
+				List<Exp> args = ExpParser.parseExpList(lexer);
+				lexer.skipNextKind(TokenKind.TOKEN_SEP_RPAREN);
+				return new FuncCallExp(lexer.getLine(), new NameExp(prefix), args);
+			} else {
+				return new NameExp(prefix);
+			}
+		}
+		return null;
 	}
 	
 	public static List<NameExp> parseIdList(Lexer lexer) {

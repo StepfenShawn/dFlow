@@ -3,9 +3,6 @@
 let a, b = 10, 20;
 a + b | stdout;
 let c = [1, 2, 3, 4, 5, 6];
-c | stdout
+c | sum | stdout;
 
-stdnum | lambda (x) => {
-	if x % 2 == 0 “是偶数”
-	else ”是奇数“
-} | stdout
+(if (a % 2 == 1) "是偶数" else "是奇数") | stdout

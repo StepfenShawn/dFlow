@@ -14,6 +14,7 @@ public class Token {
         keywords.put("func", TokenKind.TOKEN_KW_FUNC);
         keywords.put("lambda", TokenKind.TOKEN_KW_LAMBDA);
         keywords.put("let", TokenKind.TOKEN_KW_LET);
+        keywords.put("return", TokenKind.TOKEN_KW_RETURN);
         
         separator.put('+', TokenKind.TOKEN_OP_ADD);
         separator.put('-', TokenKind.TOKEN_OP_MINUS);

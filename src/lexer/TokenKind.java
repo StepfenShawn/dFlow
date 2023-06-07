@@ -35,6 +35,7 @@ public enum TokenKind {
     TOKEN_KW_LAMBDA	 , // lambda
     TOKEN_KW_FUNC	 , // fnuc
     TOKEN_KW_LET	 , // let
+    TOKEN_KW_RETURN  , // return
 
     TOKEN_NUMBER,
     TOKEN_STRING,
